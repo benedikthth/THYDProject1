@@ -8,8 +8,10 @@
 ws [ \t\r\n]
 letter [a-zA-Z]
 digit [0-9]
+
 %%
-{ws}+             /* do nothing */
+{ws}+                /* do nothing */
+"/*"([^"*/"])*"*/"   /* Comment, do nothing */
 
 "++"            { return Tokentype::OpArtInc; }
 "+"             { return Tokentype::OpArtPlus; }
@@ -23,7 +25,7 @@ digit [0-9]
 "!="            { return Tokentype::OpRelNEQ; }
 "<="            { return Tokentype::OpRelLTE; }
 "<"             { return Tokentype::OpRelLT; }
-">="             { return Tokentype::OpRelGTE; }
+">="            { return Tokentype::OpRelGTE; }
 ">"             { return Tokentype::OpRelGT; }
 
 "&&"            { return Tokentype::OpLogAnd; }
@@ -53,9 +55,8 @@ digit [0-9]
 ";"             { return Tokentype::ptSemicolon; }
 ","             { return Tokentype::ptComma; }
 
-{digit}+        { return Tokentype::Number; }
-{digit}+"."{digit}*("E"(([+-])?{digit})?)? { return Tokentype::Number; }
-{letter}({letter}|{digit}|"_")*   { return Tokentype::Identifier; }
+{digit}+("."{digit}*("E"(([+-])?{digit})?)?)?   { return Tokentype::Number; }
+{letter}({letter}|{digit}|"_")*                 { return Tokentype::Identifier; }
 
 .               { return Tokentype::ErrUnknown; }
 %%
