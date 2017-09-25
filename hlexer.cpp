@@ -163,9 +163,59 @@ void HLexer::get_next( Token& token )
             is_.get(c_);
             break;
         default:
-            token.type = Tokentype::ErrUnknown;
-            token.lexeme.push_back(c_);
-            is_.get(c_);
+            // Keyword or identifier
+            if(isalpha(c_)) {
+                while(is_.good() && (isalpha(c_) || c_ == '_' || isdigit(c_))) {
+                    token.lexeme.push_back(c_);
+                    is_.get(c_);
+                }
+                if(token.lexeme == "class") {
+                    token.type = Tokentype::kwClass;
+                }
+                else if(token.lexeme == "static") {
+                    token.type = Tokentype::kwStatic;
+                }
+                else if(token.lexeme == "void") {
+                    token.type = Tokentype::kwVoid;
+                }
+                else if(token.lexeme == "if") {
+                    token.type = Tokentype::kwIf;
+                }
+                else if(token.lexeme == "else") {
+                    token.type = Tokentype::kwElse;
+                }
+                else if(token.lexeme == "for") {
+                    token.type = Tokentype::kwFor;
+                }
+                else if(token.lexeme == "return") {
+                    token.type = Tokentype::kwReturn;
+                }
+                else if(token.lexeme == "break") {
+                    token.type = Tokentype::kwBreak;
+                }
+                else if(token.lexeme == "continue") {
+                    token.type = Tokentype::kwContinue;
+                }
+                else if(token.lexeme == "int") {
+                    token.type = Tokentype::kwInt;
+                }
+                else if(token.lexeme == "real") {
+                    token.type = Tokentype::kwReal;
+                }
+                else {
+                    token.type = Tokentype::Identifier;
+                }
+                is_.get(c_);
+            }
+            // Number
+            else if(isdigit(c_)) {
+
+            }
+            else {
+                token.type = Tokentype::ErrUnknown;
+                token.lexeme.push_back(c_);
+                is_.get(c_);
+            }
             break;
     }
 }
