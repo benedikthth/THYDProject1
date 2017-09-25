@@ -31,7 +31,8 @@
 *.out
 *.app
 
-#stuff
+# stuff
 compilers
 Makefile
 FlexLexer.cpp
+CMakeLists.txt
