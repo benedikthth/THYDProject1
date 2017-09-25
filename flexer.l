@@ -11,7 +11,9 @@ digit [0-9]
 
 %%
 {ws}+                /* do nothing */
-"/*"([^"*/"])*"*/"   /* Comment, do nothing */
+
+"//"(.)*"\n"              /* Single-Line Comment*/
+"/*"([^"*/"]|"/*")*"*/"   /* Multi-Line Comment*/
 
 "++"            { return Tokentype::OpArtInc; }
 "+"             { return Tokentype::OpArtPlus; }
