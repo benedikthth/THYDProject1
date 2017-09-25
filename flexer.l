@@ -8,6 +8,17 @@
 ws [ \t\r\n]
 %%
 {ws}+             /* do nothing */
+"class"         { return Tokentype::kwClass; }
+"static"        { return Tokentype::kwStatic; }
+"void"          { return Tokentype::kwVoid; }
+"if"            { return Tokentype::kwIf; }
+"else"        { return Tokentype::kwElse; }
+"for"           { return Tokentype::kwFor; }
+"return"        { return Tokentype::kwReturn; }
+"break"       { return Tokentype::kwBreak; }
+"continue"    { return Tokentype::kwContinue; }
+"int"           { return Tokentype::kwInt; }
+"real"          { return Tokentype::kwReal; }
 
 "{"             { return Tokentype::ptLBrace; }
 "}"             { return Tokentype::ptRBrace; }
