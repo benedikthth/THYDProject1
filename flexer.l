@@ -8,12 +8,19 @@
 %}
 ws [ \t\r\n]
 letter [a-zA-Z]
+hex [0-9a-fA-F]
 digit [0-9]
 
 
 %%
 {ws}+                /* do nothing */
+<<<<<<< HEAD
 "/*"("/*"|[^"*/"])*"*/"  /*nothing*/
+=======
+
+"//"(.)*"\n"              /* Single-Line Comment*/
+"/*"([^"*/"]|"/*")*"*/"   /* Multi-Line Comment*/
+>>>>>>> 6b79f2e3e9aeff382c5d0856c927c7d813cd512b
 
 "++"            { return Tokentype::OpArtInc; }
 "+"             { return Tokentype::OpArtPlus; }
@@ -57,7 +64,9 @@ digit [0-9]
 ";"             { return Tokentype::ptSemicolon; }
 ","             { return Tokentype::ptComma; }
 
-{digit}+("."{digit}*("E"(([+-])?{digit})?)?)?   { return Tokentype::Number; }
+{digit}+                                        { return Tokentype::Number; }
+"0"[xX]{hex}+                                   { return Tokentype::Number; }
+{digit}+"."{digit}*("E"(([+-])?{digit})?)?      { return Tokentype::Number; }
 {letter}({letter}|{digit}|"_")*                 { return Tokentype::Identifier; }
 
 .               { return Tokentype::ErrUnknown; }
