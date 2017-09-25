@@ -1,4 +1,5 @@
  // Skeleton Flex file for the project - Part 1
+ //"/*"([^"*/"])*"*/"   /* Comment, do nothing */
 %option c++
 %option noyywrap
 %option yylineno
@@ -9,9 +10,10 @@ ws [ \t\r\n]
 letter [a-zA-Z]
 digit [0-9]
 
+
 %%
 {ws}+                /* do nothing */
-"/*"([^"*/"])*"*/"   /* Comment, do nothing */
+"/*"("/*"|[^"*/"])*"*/"  /*nothing*/
 
 "++"            { return Tokentype::OpArtInc; }
 "+"             { return Tokentype::OpArtPlus; }

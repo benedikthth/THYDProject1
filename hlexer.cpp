@@ -40,6 +40,36 @@ void HLexer::get_next( Token& token )
             token.lexeme.push_back(c_);
             is_.get(c_);
             break;
+        case '[':
+            token.type = Tokentype::ptLBracket;
+            token.lexeme.push_back(c_);
+            is_.get(c_);
+            break;
+        case ']':
+            token.type = Tokentype::ptRBracket;
+            token.lexeme.push_back(c_);
+            is_.get(c_);
+            break;
+        case '(':
+            token.type = Tokentype::ptLParen;
+            token.lexeme.push_back(c_);
+            is_.get(c_);
+            break;
+        case ')':
+            token.type = Tokentype::ptRParen;
+            token.lexeme.push_back(c_);
+            is_.get(c_);
+            break;
+        case ';':
+            token.type = Tokentype::ptSemicolon;
+            token.lexeme.push_back(c_);
+            is_.get(c_);
+            break;
+        case ',':
+            token.type = Tokentype::ptComma;
+            token.lexeme.push_back(c_);
+            is_.get(c_);
+            break;
         default:
             token.type = Tokentype::ErrUnknown;
             token.lexeme.push_back(c_);
