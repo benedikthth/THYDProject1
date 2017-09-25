@@ -6,10 +6,10 @@
 #include "token.h"
 %}
 ws [ \t\r\n]
+letter [a-zA-Z]
+digit [0-9]
 %%
 {ws}+             /* do nothing */
-
-
 
 "++"            { return Tokentype::OpArtInc; }
 "+"             { return Tokentype::OpArtPlus; }
@@ -52,6 +52,10 @@ ws [ \t\r\n]
 ")"             { return Tokentype::ptRParen; }
 ";"             { return Tokentype::ptSemicolon; }
 ","             { return Tokentype::ptComma; }
+
+{digit}+        { return Tokentype::Number; }
+{digit}+"."{digit}*("E"(([+-])?{digit})?)? { return Tokentype::Number; }
+{letter}({letter}|{digit}|"_")*   { return Tokentype::Identifier; }
 
 .               { return Tokentype::ErrUnknown; }
 %%
