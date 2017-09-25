@@ -30,6 +30,98 @@ void HLexer::get_next( Token& token )
     }
 
     switch ( c_ ) {
+        // Arithmetic operators
+        case '+':
+            token.type = Tokentype::OpArtPlus;
+            token.lexeme.push_back(c_);
+            is_.get(c_);
+            if(is_.good() && c_ == '+') {
+                token.type = Tokentype::OpArtInc;
+                token.lexeme.push_back(c_);
+            }
+            break;
+        case '-':
+            token.type = Tokentype::OpArtMinus;
+            token.lexeme.push_back(c_);
+            is_.get(c_);
+            if(is_.good() && c_ == '&') {
+                token.type = Tokentype::OpArtDec;
+                token.lexeme.push_back(c_);
+            }
+            break;
+        case '*':
+            token.type = Tokentype::OpArtMult;
+            token.lexeme.push_back(c_);
+            is_.get(c_);
+            break;
+        case '/':
+            token.type = Tokentype::OpArtDiv;
+            token.lexeme.push_back(c_);
+            is_.get(c_);
+            break;
+        case '%':
+            token.type = Tokentype::OpArtModulus;
+            token.lexeme.push_back(c_);
+            is_.get(c_);
+            break;
+
+        // Logical Operators and assignment
+        case '!':
+            token.type = Tokentype::OpLogNot;
+            token.lexeme.push_back(c_);
+            is_.get(c_);
+            if(is_.good() && c_ == '=') {
+                token.type = Tokentype::OpRelNEQ;
+                token.lexeme.push_back(c_);
+            }
+            break;
+        case '|':
+            token.type = Tokentype::ErrUnknown;
+            token.lexeme.push_back(c_);
+            is_.get(c_);
+            if(is_.good() && c_ == '|') {
+                token.type = Tokentype::OpLogOr;
+                token.lexeme.push_back(c_);
+            }
+            break;
+        case '&':
+            token.type = Tokentype::ErrUnknown;
+            token.lexeme.push_back(c_);
+            is_.get(c_);
+            if(is_.good() && c_ == '&') {
+                token.type = Tokentype::OpLogAnd;
+                token.lexeme.push_back(c_);
+            }
+            break;
+        case '<':
+            token.type = Tokentype::OpRelLT;
+            token.lexeme.push_back(c_);
+            is_.get(c_);
+            if(is_.good() && c_ == '=') {
+                token.type = Tokentype::OpRelLTE;
+                token.lexeme.push_back(c_);
+            }
+            break;
+        case '>':
+            token.type = Tokentype::OpRelGT;
+            token.lexeme.push_back(c_);
+            is_.get(c_);
+            if(is_.good() && c_ == '=') {
+                token.type = Tokentype::OpRelGTE;
+                token.lexeme.push_back(c_);
+            }
+            break;
+        case '=':
+            token.type = Tokentype::OpAssign;
+            token.lexeme.push_back(c_);
+            is_.get(c_);
+            if(is_.good() && c_ == '=') {
+                token.type = Tokentype::OpRelEQ;
+                token.lexeme.push_back(c_);
+            }
+            break;
+
+        // Punctuation marks
         case '{':
             token.type = Tokentype::ptLBrace;
             token.lexeme.push_back(c_);
