@@ -7,6 +7,7 @@
 %}
 ws [ \t\r\n]
 letter [a-zA-Z]
+hex [0-9a-fA-F]
 digit [0-9]
 
 %%
@@ -57,7 +58,9 @@ digit [0-9]
 ";"             { return Tokentype::ptSemicolon; }
 ","             { return Tokentype::ptComma; }
 
-{digit}+("."{digit}*("E"(([+-])?{digit})?)?)?   { return Tokentype::Number; }
+{digit}+                                        { return Tokentype::Number; }
+"0"[xX]{hex}+                                   { return Tokentype::Number; }
+{digit}+"."{digit}*("E"(([+-])?{digit})?)?      { return Tokentype::Number; }
 {letter}({letter}|{digit}|"_")*                 { return Tokentype::Identifier; }
 
 .               { return Tokentype::ErrUnknown; }
