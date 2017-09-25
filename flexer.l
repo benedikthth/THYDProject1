@@ -65,5 +65,6 @@ digit [0-9]
 {letter}({letter}|{digit}|"_")*                 { return Tokentype::Identifier; }
 
 .               { return Tokentype::ErrUnknown; }
+""              { return Tokentype::EOI; }
 %%
  // No need to add any code here.
