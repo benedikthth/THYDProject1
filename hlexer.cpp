@@ -63,24 +63,23 @@ void HLexer::get_next( Token& token )
             token.type = Tokentype::OpArtDiv;
             token.lexeme.push_back(c_);
             is_.get(c_);
-
+            /*
             if(c_ == '*'){
 
-              /*we're in a comment!!*/
-              is_.get(c_);
+              //we're in a comment!!*
               while( is_.good() ){
 
-                if(c_ == '*' && is_.good() ){
+                if( c_ == '*' && is_.good() ){
                     // exiting comment?
                     is_.get(c_);
                     if(c_ == '/'){
                       break;
                     }
                 }
-                is_.get(c_);
 
               }
-            }
+              is_.get(c_);
+            }*/
 
             break;
         case '%':
@@ -97,6 +96,7 @@ void HLexer::get_next( Token& token )
             if(is_.good() && c_ == '=') {
                 token.type = Tokentype::OpRelNEQ;
                 token.lexeme.push_back(c_);
+                is_.get(c_);
             }
             break;
         case '|':
@@ -106,6 +106,7 @@ void HLexer::get_next( Token& token )
             if(is_.good() && c_ == '|') {
                 token.type = Tokentype::OpLogOr;
                 token.lexeme.push_back(c_);
+                is_.get(c_);
             }
             break;
         case '&':
@@ -139,10 +140,13 @@ void HLexer::get_next( Token& token )
             token.type = Tokentype::OpAssign;
             token.lexeme.push_back(c_);
             is_.get(c_);
+            /*
             if(is_.good() && c_ == '=') {
                 token.type = Tokentype::OpRelEQ;
                 token.lexeme.push_back(c_);
+                is_.get(c_);
             }
+            */
             break;
 
         // Punctuation marks
@@ -186,6 +190,8 @@ void HLexer::get_next( Token& token )
             token.lexeme.push_back(c_);
             is_.get(c_);
             break;
+
+
         default:
             // Keyword or identifier
             if(isalpha(c_)) {
@@ -229,12 +235,43 @@ void HLexer::get_next( Token& token )
                 else {
                     token.type = Tokentype::Identifier;
                 }
-                is_.get(c_);
+                //is_.get(c_);
             }
             // Number
             else if(isdigit(c_)) {
+               token.type = Tokentype::Number;
+               //is_.get(c_);
+               //check if token is . or E
+               while(isdigit(c_) && is_.good() ){
+
+                 token.lexeme.push_back(c_);
+                 is_.get(c_);
+
+                 if(!isdigit(c_)){
+
+                   //check if c_ is . or E.
+
+                   if( c_ == 'E' && is_.good() ){
+                     token.lexeme.push_back(c_);
+                     is_.get(c_);
+                     //check for sign
+                     if(c_ == '+' || c_ == '-'){
+                       token.lexeme.push_back(c_);
+                       is_.get(c_);
+                     }
+                   } else if(c_ == '.'){
+                     token.lexeme.push_back(c_);
+                     is_.get(c_);
+                   }
+
+                 }
+
+
+               }
+
 
             }
+
             else {
                 token.type = Tokentype::ErrUnknown;
                 token.lexeme.push_back(c_);

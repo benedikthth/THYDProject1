@@ -1,3 +1,7 @@
+1.2E3
+34.5E+3
+67.89E-1
+
 class Program {
     int i, j;
     real number;
