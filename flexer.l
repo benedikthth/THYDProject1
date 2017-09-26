@@ -14,13 +14,9 @@ digit [0-9]
 
 %%
 {ws}+                /* do nothing */
-<<<<<<< HEAD
-"/*"("/*"|[^"*/"])*"*/"  /*nothing*/
-=======
 
-"//"(.)*"\n"              /* Single-Line Comment*/
+"//"(.)*"\n"?             /* Single-Line Comment*/
 "/*"([^"*/"]|"/*")*"*/"   /* Multi-Line Comment*/
->>>>>>> 6b79f2e3e9aeff382c5d0856c927c7d813cd512b
 
 "++"            { return Tokentype::OpArtInc; }
 "+"             { return Tokentype::OpArtPlus; }
