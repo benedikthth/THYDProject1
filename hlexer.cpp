@@ -22,6 +22,8 @@ void HLexer::get_next( Token& token )
         is_.get(c_);
     }
 
+
+
     token.line = line_no_;
 
     if ( !is_.good() ) {
@@ -30,6 +32,120 @@ void HLexer::get_next( Token& token )
     }
 
     switch ( c_ ) {
+        // Arithmetic operators
+        case '+':
+            token.type = Tokentype::OpArtPlus;
+            token.lexeme.push_back(c_);
+            is_.get(c_);
+            if(is_.good() && c_ == '+') {
+                token.type = Tokentype::OpArtInc;
+                token.lexeme.push_back(c_);
+                is_.get(c_);
+            }
+            break;
+        case '-':
+            token.type = Tokentype::OpArtMinus;
+            token.lexeme.push_back(c_);
+            is_.get(c_);
+            if(is_.good() && c_ == '&') {
+                token.type = Tokentype::OpArtDec;
+                token.lexeme.push_back(c_);
+                is_.get(c_);
+            }
+            break;
+
+        case '*':
+            token.type = Tokentype::OpArtMult;
+            token.lexeme.push_back(c_);
+            is_.get(c_);
+            break;
+        case '/':
+            token.type = Tokentype::OpArtDiv;
+            token.lexeme.push_back(c_);
+            is_.get(c_);
+
+            if(c_ == '*'){
+
+              /*we're in a comment!!*/
+              is_.get(c_);
+              while( is_.good() ){
+
+                if(c_ == '*' && is_.good() ){
+                    // exiting comment?
+                    is_.get(c_);
+                    if(c_ == '/'){
+                      break;
+                    }
+                }
+                is_.get(c_);
+
+              }
+            }
+
+            break;
+        case '%':
+            token.type = Tokentype::OpArtModulus;
+            token.lexeme.push_back(c_);
+            is_.get(c_);
+            break;
+
+        // Logical Operators and assignment
+        case '!':
+            token.type = Tokentype::OpLogNot;
+            token.lexeme.push_back(c_);
+            is_.get(c_);
+            if(is_.good() && c_ == '=') {
+                token.type = Tokentype::OpRelNEQ;
+                token.lexeme.push_back(c_);
+            }
+            break;
+        case '|':
+            token.type = Tokentype::ErrUnknown;
+            token.lexeme.push_back(c_);
+            is_.get(c_);
+            if(is_.good() && c_ == '|') {
+                token.type = Tokentype::OpLogOr;
+                token.lexeme.push_back(c_);
+            }
+            break;
+        case '&':
+            token.type = Tokentype::ErrUnknown;
+            token.lexeme.push_back(c_);
+            is_.get(c_);
+            if(is_.good() && c_ == '&') {
+                token.type = Tokentype::OpLogAnd;
+                token.lexeme.push_back(c_);
+            }
+            break;
+        case '<':
+            token.type = Tokentype::OpRelLT;
+            token.lexeme.push_back(c_);
+            is_.get(c_);
+            if(is_.good() && c_ == '=') {
+                token.type = Tokentype::OpRelLTE;
+                token.lexeme.push_back(c_);
+            }
+            break;
+        case '>':
+            token.type = Tokentype::OpRelGT;
+            token.lexeme.push_back(c_);
+            is_.get(c_);
+            if(is_.good() && c_ == '=') {
+                token.type = Tokentype::OpRelGTE;
+                token.lexeme.push_back(c_);
+            }
+            break;
+        case '=':
+            token.type = Tokentype::OpAssign;
+            token.lexeme.push_back(c_);
+            is_.get(c_);
+            if(is_.good() && c_ == '=') {
+                token.type = Tokentype::OpRelEQ;
+                token.lexeme.push_back(c_);
+            }
+            break;
+
+        // Punctuation marks
         case '{':
             token.type = Tokentype::ptLBrace;
             token.lexeme.push_back(c_);
@@ -71,9 +187,59 @@ void HLexer::get_next( Token& token )
             is_.get(c_);
             break;
         default:
-            token.type = Tokentype::ErrUnknown;
-            token.lexeme.push_back(c_);
-            is_.get(c_);
+            // Keyword or identifier
+            if(isalpha(c_)) {
+                while(is_.good() && (isalpha(c_) || c_ == '_' || isdigit(c_))) {
+                    token.lexeme.push_back(c_);
+                    is_.get(c_);
+                }
+                if(token.lexeme == "class") {
+                    token.type = Tokentype::kwClass;
+                }
+                else if(token.lexeme == "static") {
+                    token.type = Tokentype::kwStatic;
+                }
+                else if(token.lexeme == "void") {
+                    token.type = Tokentype::kwVoid;
+                }
+                else if(token.lexeme == "if") {
+                    token.type = Tokentype::kwIf;
+                }
+                else if(token.lexeme == "else") {
+                    token.type = Tokentype::kwElse;
+                }
+                else if(token.lexeme == "for") {
+                    token.type = Tokentype::kwFor;
+                }
+                else if(token.lexeme == "return") {
+                    token.type = Tokentype::kwReturn;
+                }
+                else if(token.lexeme == "break") {
+                    token.type = Tokentype::kwBreak;
+                }
+                else if(token.lexeme == "continue") {
+                    token.type = Tokentype::kwContinue;
+                }
+                else if(token.lexeme == "int") {
+                    token.type = Tokentype::kwInt;
+                }
+                else if(token.lexeme == "real") {
+                    token.type = Tokentype::kwReal;
+                }
+                else {
+                    token.type = Tokentype::Identifier;
+                }
+                is_.get(c_);
+            }
+            // Number
+            else if(isdigit(c_)) {
+
+            }
+            else {
+                token.type = Tokentype::ErrUnknown;
+                token.lexeme.push_back(c_);
+                is_.get(c_);
+            }
             break;
     }
 }
