@@ -63,23 +63,26 @@ void HLexer::get_next( Token& token )
             token.type = Tokentype::OpArtDiv;
             token.lexeme.push_back(c_);
             is_.get(c_);
-            /*
+
             if(c_ == '*'){
 
               //we're in a comment!!*
               while( is_.good() ){
-
+                is_.get(c_);
                 if( c_ == '*' && is_.good() ){
                     // exiting comment?
                     is_.get(c_);
                     if(c_ == '/'){
+                      is_.get(c_);
                       break;
                     }
                 }
 
               }
-              is_.get(c_);
-            }*/
+            //  is_.get(c_);
+              get_next(token);
+            }
+
 
             break;
         case '%':
@@ -234,6 +237,15 @@ void HLexer::get_next( Token& token )
                 }
                 else {
                     token.type = Tokentype::Identifier;
+                    //TODO: add symbol table entry.
+
+                    token.entry = symbol_table_.lookup(token.lexeme);
+                    if(token.entry == nullptr){
+                    SymbolTable::Entry entry;
+                      entry.name = token.lexeme;
+                      symbol_table_.add(entry);
+                    }
+
                 }
                 //is_.get(c_);
             }
@@ -250,7 +262,7 @@ void HLexer::get_next( Token& token )
                  if(!isdigit(c_)){
 
                    //check if c_ is . or E.
-
+                   // 1.2E-1E
                    if( c_ == 'E' && is_.good() ){
                      token.lexeme.push_back(c_);
                      is_.get(c_);
@@ -269,6 +281,7 @@ void HLexer::get_next( Token& token )
 
                }
 
+               //TODO: create symbol table entry.
 
             }
 

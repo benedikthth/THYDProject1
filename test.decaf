@@ -1,6 +1,7 @@
-1.2E3
-34.5E+3
+/*1.2E3*/
+/*34.5E+3
 67.89E-1
+*/
 
 class Program {
     int i, j;
@@ -25,9 +26,4 @@ int x = 0;
 
 /* This is a nei
 ghbor
-*/
-
-/* ass
-/* tastic
-*/ shit
 */
