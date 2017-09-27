@@ -76,12 +76,15 @@ void HLexer::get_next( Token& token )
                       is_.get(c_);
                       break;
                     }
+                }else if(c_ == '\n'){
+                  ++ line_no_;
                 }
 
               }
             //  is_.get(c_);
               get_next(token);
             }
+
 
 
             break;
@@ -241,9 +244,9 @@ void HLexer::get_next( Token& token )
 
                     token.entry = symbol_table_.lookup(token.lexeme);
                     if(token.entry == nullptr){
-                    SymbolTable::Entry entry;
+                      SymbolTable::Entry entry;
                       entry.name = token.lexeme;
-                      symbol_table_.add(entry);
+                      token.entry = symbol_table_.add(entry);
                     }
 
                 }
@@ -281,7 +284,13 @@ void HLexer::get_next( Token& token )
 
                }
 
-               //TODO: create symbol table entry.
+               /**/
+               token.entry = symbol_table_.lookup(token.lexeme);
+               if(token.entry == nullptr){
+                 SymbolTable::Entry entry;
+                 entry.name = token.lexeme;
+                 token.entry = symbol_table_.add(entry);
+               }
 
             }
 
