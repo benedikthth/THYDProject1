@@ -1,12 +1,14 @@
-/*1.2E3*/
-/*34.5E+3
-67.89E-1
+/* single_Line_Comment_Block */
+
+/*
+multi_Line_Comment_Block
 */
 
+// a single line comment
 class Program {
     int i, j;
     real number;
-
+    /*
     static void main() {
         i = 0;
         j = 1;
@@ -18,12 +20,19 @@ class Program {
         }
         i = i + j;
     }
+    */
 }
-
-/* I am a friend */
-int x = 0;
-/*here is my other friend*/
-
-/* This is a nei
-ghbor
+/*
+some_comment
+// a_comment_inside_a_comment_block
 */
+/*
+inc ++
+dec --
+inceq +=
+deceq -=
+eq ==
+neq !=
+ge >=
+le <=
+amp &&

@@ -47,7 +47,7 @@ void HLexer::get_next( Token& token )
             token.type = Tokentype::OpArtMinus;
             token.lexeme.push_back(c_);
             is_.get(c_);
-            if(is_.good() && c_ == '&') {
+            if(is_.good() && c_ == '-') {
                 token.type = Tokentype::OpArtDec;
                 token.lexeme.push_back(c_);
                 is_.get(c_);
@@ -64,15 +64,22 @@ void HLexer::get_next( Token& token )
             token.lexeme.push_back(c_);
             is_.get(c_);
 
+            bool unClosedComment;
+
             if(c_ == '*'){
 
               //we're in a comment!!*
+              int current_line = line_no_;
+              token.lexeme.push_back(c_);
+              unClosedComment = true;
               while( is_.good() ){
                 is_.get(c_);
+                token.lexeme.push_back(c_);
                 if( c_ == '*' && is_.good() ){
                     // exiting comment?
                     is_.get(c_);
                     if(c_ == '/'){
+                      unClosedComment = false;
                       is_.get(c_);
                       break;
                     }
@@ -82,6 +89,18 @@ void HLexer::get_next( Token& token )
 
               }
             //  is_.get(c_);
+              if(unClosedComment){
+                //line_no_ = current_line;
+                token.type = Tokentype::ErrUnknown;
+                break;
+              } else {
+                get_next(token);
+              }
+            } else if(c_ == '/'){
+              //in another comment.
+              while(c_ != '\n' && is_.good() ){
+                is_.get(c_);
+              }
               get_next(token);
             }
 
@@ -122,6 +141,7 @@ void HLexer::get_next( Token& token )
             if(is_.good() && c_ == '&') {
                 token.type = Tokentype::OpLogAnd;
                 token.lexeme.push_back(c_);
+                is_.get(c_);
             }
             break;
         case '<':
@@ -131,6 +151,7 @@ void HLexer::get_next( Token& token )
             if(is_.good() && c_ == '=') {
                 token.type = Tokentype::OpRelLTE;
                 token.lexeme.push_back(c_);
+                is_.get(c_);
             }
             break;
         case '>':
@@ -140,19 +161,20 @@ void HLexer::get_next( Token& token )
             if(is_.good() && c_ == '=') {
                 token.type = Tokentype::OpRelGTE;
                 token.lexeme.push_back(c_);
+                is_.get(c_);
             }
             break;
         case '=':
             token.type = Tokentype::OpAssign;
             token.lexeme.push_back(c_);
             is_.get(c_);
-            /*
+
             if(is_.good() && c_ == '=') {
                 token.type = Tokentype::OpRelEQ;
                 token.lexeme.push_back(c_);
                 is_.get(c_);
             }
-            */
+
             break;
 
         // Punctuation marks
